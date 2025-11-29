@@ -56,13 +56,14 @@ header {
 .dashboard-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
 }
 
 .chart-container {
   width: 90%;
-  height: 65vh;
+  max-width: 800px;
+  height: 400px;
   background-color: #f9f9f9;
   margin: 6.5rem auto 7px auto;
   padding: 0 10px 20px 10px;
@@ -72,12 +73,13 @@ header {
   flex-direction: column;
   border-radius: 5px;
   border: 1px solid #e4e4e4;
-  flex-grow: 1;
+  flex-grow: 0;
 }
 
 .form-container {
   background-color: #ffffff;
   width: 90%;
+  max-width: 800px;
   border-radius: 5px;
   margin: 5px auto 20px auto;
   padding: 8px;
