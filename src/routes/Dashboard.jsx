@@ -85,9 +85,17 @@ export default function Dashboard() {
     return 5000;
   }
 
-  return (
-    <div className="dashboard-wrapper">
-      <div className="chart-container">
+return (
+    <div
+      className="dashboard-wrapper"
+      role="region"
+      aria-label="Sales dashboard"
+    >
+      <div
+        className="chart-container"
+        role="region"
+        aria-label="Sales chart and data"
+      >
         <h2>Total Sales This Quarter ($)</h2>
         <div style={{ flex: 1 }}>
           <Chart
@@ -95,8 +103,8 @@ export default function Dashboard() {
               data: chartData,
               primaryAxis,
               secondaryAxes,
-              type: "bar",
-              defaultColors: ["#58d675"],
+              type: 'bar',
+              defaultColors: ['#58d675'],
               tooltip: {
                 show: false,
               },
