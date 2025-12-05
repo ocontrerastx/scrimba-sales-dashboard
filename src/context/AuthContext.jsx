@@ -14,14 +14,17 @@ export const AuthContextProvider = ({ children }) => {
       if (error) {
         throw error;
       }
-
-      console.log(data.session);
       setSession(data.session);
     } catch (error) {
       console.error('Error getting session:', error.message);
     }
   }
   getInitialSession()
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    setSession(session);
+    console.log('Session changed:', session);
+  })
 
   }, []);
 
