@@ -47,17 +47,17 @@ export const AuthContextProvider = ({ children }) => {
     }
   }
 
-    const signOut = async () => {
+  const signOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut()
-
-      if(error) {
-        console.error('Supabase sign-out error: ', error.message)
-        return {success: false, error: error.message}
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Supabase sign-out error:', error.message);
+        return { success: false, error: error.message };
       }
-    } catch(error) {
-      console.error('Unexpected error during sign-out: ', error.message)
-      return {success: false, error: 'An unexptected error occured. Please try again.'}
+      return { success: true };
+    } catch (error) {
+      console.error('Unexpected error during sign-out:', error.message);
+      return { success: false, error: 'An unexpected error occurred during sign out.' };
     }
   } 
 
