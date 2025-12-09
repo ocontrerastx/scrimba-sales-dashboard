@@ -15,7 +15,6 @@ function Form({ metrics }) {
         console.error("Error adding deal: ", error.message);
         return new Error("Failed to add deal");
       }
-
       return null;
     },
     null
