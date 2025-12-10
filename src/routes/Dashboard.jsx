@@ -32,19 +32,23 @@ export default function Dashboard() {
 
   async function fetchMetrics() {
     try {
-      const { data, error } = await supabase.from("sales_deals").select(
-        `
-          name,
-          value.sum()
+      const { data, error } = await supabase
+        .from('sales_deals')
+        .select(
+          `
+          value.sum(),
+          ...user_profiles!inner(
+            name
+          )
           `,
-      );
+        );
       if (error) {
         throw error;
       }
-      console.log(data);
-      setMetrics(data);
+      console.log("Fetched metrics:", data);
+      setMetrics(data); 
     } catch (error) {
-      console.error("Error fetching metrics: ", error);
+      console.error('Error fetching metrics:', error.message);
     }
   }
 
@@ -112,7 +116,7 @@ return (
           />
         </div>
       </div>
-      <Form metrics={metrics} />
+      <Form />
     </div>
   );
 }

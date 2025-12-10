@@ -1,11 +1,17 @@
 import { useActionState } from "react";
+import { useAuth } from "../context/AuthContext";
 import supabase from "../supabase-client"
 
-function Form({ metrics }) {
+function Form() {
+  const { users, session } = useAuth();
   const [error, submitAction, isPending] = useActionState(
     async (previousSate, formData) => {
+
+      const submittedName = formData.get("name");
+      const user = users.find((u) => u.name === submittedName)
+
       const newDeal = {
-        name: formData.get("name"),
+        user_id: user.id,
         value: formData.get("value"),
       };
 
@@ -19,10 +25,15 @@ function Form({ metrics }) {
     },
     null
   );
+
+  const currentUser = users.find(u => u.id === session?.user?.id)
+
   const generateOptions = () => {
-    return metrics.map((metric) => (
-      <option key={metric.name} value={metric.name}>
-        {metric.name}
+    return users
+    .filter(user => user.account_type === 'rep')
+    .map(( user) => (
+      <option key={user.id} value={user.name}>
+        {user.name}
       </option>
     ));
   };
@@ -39,19 +50,35 @@ function Form({ metrics }) {
           the amount.
         </div>
 
-        <label htmlFor="deal-name">
-          Name:
-          <select
-            id="deal-name"
-            name="name"
-            defaultValue={metrics?.[0]?.name || ""}
-            aria-required="true"
-            aria-invalid={error ? "true" : "false"}
-            disabled={isPending}
-          >
-            {generateOptions()}
-          </select>
-        </label>
+        {currentUser?.account_type === 'rep' ? (
+          <label htmlFor="deal-name">
+            Name:
+            <input
+              id="deal-name"
+              type="text"
+              name="name"
+              value={currentUser?.name || ''}
+              readOnly
+              className="rep-name-input"
+              aria-label="Sales representative name"
+              aria-readonly="true"
+            />
+          </label>
+        ) : (
+          <label htmlFor="deal-name">
+            Name:
+            <select
+              id="deal-name"
+              name="name"
+              defaultValue={users[0]?.name || ''}
+              aria-required="true"
+              aria-invalid={error ? 'true' : 'false'}
+              disabled={isPending}
+            >
+              {generateOptions()}
+            </select>
+          </label>
+        )}
 
         <label htmlFor="deal-value">
           Amount: $
@@ -64,7 +91,7 @@ function Form({ metrics }) {
             min="0"
             step="10"
             aria-required="true"
-            aria-invalid={error ? "true" : "false"}
+            aria-invalid={error ? 'true' : 'false'}
             aria-label="Deal amount in dollars"
             disabled={isPending}
           />
@@ -72,20 +99,22 @@ function Form({ metrics }) {
 
         <button
           type="submit"
-          // disabled=
-          // aria-busy=
+          disabled={isPending}
+          aria-busy={isPending}
         >
-          {isPending ? "Adding..." : "Add Deal"}
+          {isPending ? 'Adding...' : "Add Deal"}
         </button>
       </form>
 
-      {error && (
-        <div role="alert" className="error-message">
-          {error.message}
-        </div>
-      )}
-    </div>
-  );
+      {
+        error && (
+          <div role='alert' className="error-message">
+            {error.message}
+          </div>
+        )
+      }
+    </div >
+  )
 }
 
 export default Form;

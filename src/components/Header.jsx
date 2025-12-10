@@ -3,21 +3,29 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
-  const { signOut, session } = useAuth();
+  const { signOut, session, users } = useAuth();
   const [ error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const currentUser = users.find(user => user.id === session?.user?.id)
+      const accountTypeMap = {
+      rep: 'Sales Rep',
+      admin: 'Admin,'
+    }
+
+    const displayAccountType = currentUser?.account_type ? accountTypeMap[currentUser.account_type] : ''
 
   const handleSignOut = async (e) => {
     e.preventDefault();
     
     const {success, error } = await signOut();
-if (success) {
-  navigate('/signin')
-} else {
-  setError(error.message)
-}
-
+    if (success) {
+      navigate('/signin')
+    } else {
+      setError(error.message)
+    }
   }
+
   return (
     <>
       <header role="banner" aria-label="Dashboard header">
@@ -28,7 +36,7 @@ if (success) {
         >
           <h2>
             <span className="sr-only">Logged in as:</span>
-            {session?.user?.email}
+            {currentUser?.name} {displayAccountType}
           </h2>
           {error && (
             <div role="role" className="error-message" id="signout-error">
